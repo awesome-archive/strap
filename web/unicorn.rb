@@ -1,1 +1,7 @@
-worker_processes (ENV["WEB_CONCURRENCY"] || 3).to_i
+# frozen_string_literal: true
+
+worker_processes ENV.fetch("WEB_CONCURRENCY", 3).to_i
+
+# needed to avoid multiple workers from having different session secrets
+require "securerandom"
+ENV["SESSION_SECRET"] = SecureRandom.hex(64) unless ENV["SESSION_SECRET"]
